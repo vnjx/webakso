@@ -1,0 +1,128 @@
+@extends('dashboard.layouts.main')
+
+@section('container')
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Tambah Stok Produk</h1>
+</div>
+
+<div class="col-lg-8">
+
+    <form method="post" action="/dashboard/products" class="mb-4" enctype="multipart/form-data">
+        @csrf
+        <div class="mb-3">
+          <label for="nampro" class="form-label">Nama Produk</label>
+          <input type="text" class="form-control @error('nampro') is-invalid @enderror" id="nampro" name="nampro" required autofocus value="{{ old('nampro') }}">
+          @error('nampro')
+          <div class="invalid-feedback">
+            {{ $message }}
+          </div>
+          @enderror
+        </div>
+        <div class="mb-3">
+          <label for="stok" class="form-label">Stok Produk</label>
+          <input type="number" class="form-control @error('stok') is-invalid @enderror" id="stok" name="stok" required autofocus value="{{ old('stok') }}">
+          @error('stok')
+          <div class="invalid-feedback">
+            {{ $message }}
+          </div>
+          @enderror
+        </div>
+        <div class="mb-3">
+          <label for="harga" class="form-label">Harga Produk</label>
+          <input type="number" class="form-control @error('harga') is-invalid @enderror" id="harga" name="harga" required autofocus value="{{ old('harga') }}">
+          @error('harga')
+          <div class="invalid-feedback">
+            {{ $message }}
+          </div>
+          @enderror
+        </div>
+        <div class="mb-3">
+          <label for="slug" class="form-label">Slug</label>
+          <input type="text" class="form-control" id="slug" name="slug" required value="{{ old('slug') }}" readonly>
+        </div>
+        <div class="mb-3">
+          <label for="category" class="form-label">Kategori</label>
+          <select class="form-select" name="category_id">
+          @foreach ($categories as $category)
+            @if(old('category_id') == $category->id)
+            <option value="{{ $category->id }}" selected>{{ $category->name }}</option>
+            @else
+            <option value="{{ $category->id }}">{{ $category->name }}</option>
+            @endif
+          @endforeach
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="image" class="form-label">Gambar Produk</label>
+          <img class="img-preview img-fluid mb-3 col-sm-5">
+          <input class="form-control @error('image') is-invalid @enderror" type="file" id="image" name="image" onchange="previewImage()">
+          @error('image')
+          <div class="invalid-feedback">
+            {{ $message }}
+          </div>
+          @enderror
+        </div>
+        <div class="mb-3">
+          <label for="body" class="form-label">Deskripsi</label>
+          @error('body')
+          <p class="text-danger">{{ $message }}</p>
+          @enderror
+          <input id="body" type="hidden" name="body" value="{{ old('body') }}">
+          <trix-editor input="body"></trix-editor>
+        </div>
+        <button type="submit" class="btn btn-primary">Tambah Produk</button>
+
+    </form>
+
+<script>
+  const nampro = document.querySelector('#nampro')
+  const slug = document.querySelector('#slug')
+
+  nampro.addEventListener('change', function() {
+    fetch('/dashboard/products/checkSlug?nampro=' + nampro.value)
+    .then(response => response.json())
+    .then(data => slug.value = data.slug)
+  });
+
+  document.addEventListener('trix-file-accept', function(e){
+    e.prefentDefault();
+  })
+
+  function previewImage() {
+    const image = document.querySelector('#image');
+    const imgPreview = document.querySelector('.img-preview');
+
+    imgPreview.style.display = 'block';
+
+    const oFReader = new FileReader();
+    oFReader.readAsDataURL(image.files[0]);
+
+    oFReader.onload = function(oFREvent) {
+      imgPreview.src = oFREvent.target.result;
+    }
+  }
+  // var dengan_rupiah = document.getElementById('dengan-rupiah');
+  //   dengan_rupiah.addEventListener('keyup', function(e)
+  //   {
+  //       dengan_rupiah.value = formatRupiah(this.value, 'Rp. ');
+  //   });
+
+  //   function formatRupiah(angka, prefix)
+  //   {
+  //       var number_integer = angka.replace(/[^,\d]/g, '').toInteger(),
+  //           split    = number_integer.split(','),
+  //           sisa     = split[0].length % 3,
+  //           rupiah     = split[0].substr(0, sisa),
+  //           ribuan     = split[0].substr(sisa).match(/\d{3}/gi);
+            
+  //       if (ribuan) {
+  //           separator = sisa ? '.' : '';
+  //           rupiah += separator + ribuan.join('.');
+  //       }
+        
+  //       rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+  //       return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+  //   }
+</script>
+@endsection
+
