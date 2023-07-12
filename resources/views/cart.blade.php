@@ -4,6 +4,11 @@
 
 @if(session('cart'))
 <table id="cart" class="table table-hover table-condensed">
+   <!-- @TODO: replace SET_YOUR_CLIENT_KEY_HERE with your client key -->
+   <script type="text/javascript"
+   src="https://app.sandbox.midtrans.com/snap/snap.js"
+   data-client-key="{{config('midtrans.client_key')}}"></script>
+ <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment -->
   <thead>
     <tr>
       <th style="width: 50%">Produk</th>
@@ -14,6 +19,8 @@
     </tr>
   </thead>
   <tbody>
+    <form action="/session" method="POST">
+      @csrf
     @php $total = 0 @endphp
             @foreach(session('cart') as $id => $details)
                 @php $total += $details['price'] * $details['quantity'] @endphp
@@ -45,15 +52,20 @@
     <tr>
       <td colspan="5" align="right">
         <a href="{{ url('/katalog') }}" class="btn btn-danger"> <i class="bi bi-backspace-fill"></i> Lanjut Belanja</a>
-        <a href="{{ url('/checkout') }}" class="btn btn-success"> <i class="bi bi-credit-card-2-back"></i> Checkout</a>
       </td>
+      <td>
+          <button type="submit" class="btn btn-success"><i class="bi bi-credit-card-2-back"></i> Checkout</a>
+        </td>
     </tr>
+  </form>
   </tfoot>
   @else
   <h1>Keranjang anda masih kosong!</h1>
+  <a href="/katalog">Belanja sekarang!</a>
   @endif
 </table>
 @endsection
+
 
 @section('scripts')
 <script type="text/javascript">

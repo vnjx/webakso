@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Midtrans\Snap;
+use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\User;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -58,6 +59,7 @@ class ProductController extends Controller
                 "gambar" => $product->image,
                 "price" => $product->harga,
                 "stock" => $product->stok,
+                "email" => $product->email,
                 "quantity" => 1
             ];
             with($product->decrement('stok',));
@@ -88,19 +90,6 @@ class ProductController extends Controller
             }
             session()->flash('success', 'Produk sudah dihapus dari keranjang!');
         }
-    }
-
-    public function checkout(Request $request)
-    {
-        if($request->id) {
-            $cart = session()->get('cart');
-            if(isset($cart[$request->id])) {
-                unset($cart[$request->id]);
-                session()->put('cart', $cart);
-            }
-            session()->flash('success', 'Pesanan anda akan diproses!');
-        }
-        
     }
 
 }

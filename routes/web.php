@@ -16,6 +16,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminOriginController;
 use App\Http\Controllers\AdminCategoryController;
+use App\Http\Controllers\StripeController;
 use App\Http\Controllers\DashboardPostController;
 use App\Http\Controllers\DashboardConfirmController;
 use App\Http\Controllers\DashboardProductController;
@@ -42,18 +43,9 @@ Route::get('/', function () {
     ]);
 });
 
-// Route::post('/', function () {
-    
-//     $confirmation = new Confirmation();
-//     $confirmation->name     = request()->name;
-//     $confirmation->email    = request()->email;
-//     $confirmation->password = request()->password;
-
-//     \Mail::to('marvinluckyanto17@gmail.com')->send(new ConfirmationEmail($confirmation));
-
-//     return back();
-
-// });
+Route::post('/session', [StripeController::class, 'session'])->name('session');
+Route::get('/success',[StripeController::class, 'success'])->name('success');
+Route::get('/cancel',[StripeController::class, 'cancel'])->name('cancel');
 
 Route::get('/about', function () {
     return view('about', [
@@ -70,12 +62,7 @@ Route::get('/cart', function() {
     ]);
 })->middleware('auth');
 
-Route::get('/checkout', function() {
-    return view('checkout', [
-        "title" => "Checkout",
-        "active" => "checkout",
-    ]);
-})->middleware('auth');
+
 
 
 Route::get('/blog', [PostController::class, 'index'])->middleware('auth');
@@ -124,7 +111,6 @@ Route::get('/dashboard/origins/checkSlug', [AdminOriginController::class, 'check
 Route::get('add-to-cart/{id}', [ProductController::class, 'addToCart'])->name('add_to_cart')->middleware('auth');
 Route::patch('update-cart', [ProductController::class, 'update'])->name('update_cart');
 Route::delete('remove-from-cart', [ProductController::class, 'remove'])->name('remove_from_cart');
-Route::patch('checkout-cart', [ProductController::class, 'checkout'])->name('checkout_cart');
 
 Route::get('/dashboard/posts/print', [DashboardPostController::class, 'print'])->middleware('auth');
 Route::post('/select', [DashboardPostController::class, 'getDate'])->middleware('admin');

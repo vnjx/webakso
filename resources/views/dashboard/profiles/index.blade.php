@@ -10,8 +10,9 @@
             @foreach ($user as $user)
             <ul>
                 <li class="nav-item"><h5>Nama Lengkap : {{ $user->name }}</h5></li>
-                <li class="nav-item"><h5>Username: {{ $user->username }}</h5></li>
+                <li class="nav-item"><h5>Username : {{ $user->username }}</h5></li>
                 <li class="nav-item"><h5>Alamat Email : {{ $user->email }}</h5></li>
+                <li class="nav-item"><h5>No Telepon : {{ $user->phone }}</h5></li>
                 <li class="nav-item"><h5>Alamat Rumah : {{ $user->address }}</h5></li>
                 <li class="nav-item"><h5>Waktu Registrasi : {{ date('M d, Y h:i A', strtotime($user->created_at)) }}</h5></li>
             </ul>

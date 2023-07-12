@@ -13,8 +13,7 @@ class DashboardOrderController extends Controller
      */
     public function index()
     {
-        return view('dashboard.orders.index',[
-        ]);
+        return view('dashboard.orders.index', [] );
     }
 
     /**
